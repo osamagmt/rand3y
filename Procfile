@@ -1,1 +1,1 @@
-worker: Randy.js
+worker: bot.js
