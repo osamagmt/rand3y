@@ -7,79 +7,8 @@ client.on('ready',  () => {
     console.log(`Logged in as * [ " ${client.user.username} " ] Users! [ " ${client.users.size} " ]`);
     console.log(`Logged in as * [ " ${client.user.username} " ] channels! [ " ${client.channels.size} " ]`);
   });
- 
-		var prefix = "!"
-const welcome = JSON.parse(fs.readFileSync('./welcomer.json' , 'utf8'));
- 
-client.on('message', message => {
-           if (!message.channel.guild) return;
-
-    let room = message.content.split(" ").slice(1);
-    let findroom = message.guild.channels.find('name', `${room}`)
-    if(message.content.startsWith(prefix + "setWelcomer")) {
-        if(!message.channel.guild) return message.reply('**This Command Only For Servers**');
-        if(!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('**Sorry But You Dont Have Permission** `MANAGE_GUILD`' );
-if(!room) return message.channel.send('Please Type The Channel Name')
-if(!findroom) return message.channel.send('Cant Find This Channel')
-let embed = new Discord.RichEmbed()
-.setTitle('**Done The Welcome Code Has Been Setup**')
-.addField('Channel:', `${room}`)
-.addField('Requested By:', `${message.author}`)
-.setThumbnail(message.author.avatarURL)
-.setFooter(`${client.user.username}`)
-message.channel.sendEmbed(embed)
-welcome[message.guild.id] = {
-channel: room,
-onoff: 'On',
-by: 'Off'
-}
-fs.writeFile("./welcomer.json", JSON.stringify(welcome), (err) => {
-if (err) console.error(err)
-})
-    }})
-client.on('message', message => {
-  
-    if(message.content.startsWith(prefix + "toggleWelcome")) {
-        if(!message.channel.guild) return message.reply('**This Command Only For Servers**');
-        if(!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('**Sorry But You Dont Have Permission** `MANAGE_GUILD`' );
-        if(!welcome[message.guild.id]) welcome[message.guild.id] = {
-          onoff: 'Off'
-        }
-          if(welcome[message.guild.id].onff === 'Off') return [message.channel.send(`**The Welcome Is __𝐎𝐍__ !**`), welcome[message.guild.id].onoff = 'On']
-          if(welcome[message.guild.id].onoff === 'On') return [message.channel.send(`**The Welcome Is __𝐎𝐅𝐅__ !**`), welcome[message.guild.id].onoff = 'Off']
-          fs.writeFile("./welcome.json", JSON.stringify(welcome), (err) => {
-            if (err) console.error(err)
-            .catch(err => {
-              console.error(err);
-          });
-            })
-          }
-          
-        })
-
-        client.on('message', message => {
-  
-            if(message.content.startsWith(prefix + "toggleInvitedby")) {
-                if(!message.channel.guild) return message.reply('**This Command Only For Servers**');
-                if(!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('**Sorry But You Dont Have Permission** `MANAGE_GUILD`' );
-                if(!welcome[message.guild.id]) welcome[message.guild.id] = {
-                  by: 'Off'
-                }
-                  if(welcome[message.guild.id].by === 'Off') return [message.channel.send(`**The Invited By Is __𝐎𝐍__ !**`), welcome[message.guild.id].by = 'On']
-                  if(welcome[message.guild.id].by === 'On') return [message.channel.send(`**The Invited By Is __𝐎𝐅𝐅__ !**`), welcome[message.guild.id].by = 'Off']
-                  fs.writeFile("./welcome.json", JSON.stringify(welcome), (err) => {
-                    if (err) console.error(err)
-                    .catch(err => {
-                      console.error(err);
-                  });
-                    })
-                  }
-                  
-                })
-                
 
 client.on('guildMemberAdd',async member => {
-    if(welcome[member.guild.id].onoff === 'Off') return;
     const Canvas = require('canvas');
     const jimp = require('jimp');
     const w = ['./welcome1.png'];
@@ -114,14 +43,8 @@ client.on('guildMemberAdd',async member => {
             ctx.fontSize = '72px';
             ctx.fillStyle = "#ffffff";
             ctx.textAlign = "center";
-            ctx.fillText(member.user.username, 545, 177);
-           
-            ctx.font = '16px Arial Bold';
-            ctx.fontSize = '72px';
-            ctx.fillStyle = "#ffffff";
-            ctx.textAlign = "center";
-            ctx.fillText(`${member.guild.memberCount} Members`, 580, 200);
-           
+            ctx.fillText(member.user.username, 545, 100);
+          
             let Avatar = Canvas.Image;
             let ava = new Avatar;
             ava.src = buf;
@@ -131,39 +54,11 @@ client.on('guildMemberAdd',async member => {
             ctx.clip();
             ctx.drawImage(ava, 36, 21, 260, 260);
              
-            let c = member.guild.channels.find('name', `${welcome[member.guild.id].channel}`)
+            let c = member.guild.channels.find('name', `txt`)
             if(!c) return;
             c.sendFile(canvas.toBuffer());
    
   });
   });
   });
-
-  const invites = {};
-
-const wait = require('util').promisify(setTimeout);
-
-client.on('ready', () => {
-  wait(1000);
-
-  client.guilds.forEach(g => {
-    g.fetchInvites().then(guildInvites => {
-      invites[g.id] = guildInvites;
-    });
-  });
-});
-
-client.on('guildMemberAdd', member => {
-    if(welcome[member.guild.id].by === 'Off') return;
-  member.guild.fetchInvites().then(guildInvites => {
-    const ei = invites[member.guild.id];
-    invites[member.guild.id] = guildInvites;
-    const invite = guildInvites.find(i => ei.get(i.code).uses < i.uses);
-    const inviter = client.users.get(invite.inviter.id);
-    const logChannel = member.guild.channels.find(channel => channel.name === `${welcome[member.guild.id].channel}`);
-    if(!logChannel) return;
-    logChannel.send(`Invited By: <@${inviter.id}>`);
-  });
-});
-
 client.login(process.env.BOT_TOKEN);
