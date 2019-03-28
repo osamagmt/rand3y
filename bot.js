@@ -29,7 +29,7 @@ client.on('guildMemberAdd',async member => {
               let BG = Canvas.Image;
               let ground = new Image;
               ground.src = Background;
-              ctx.drawImage(ground, 0, 0, 785, 320);
+              ctx.drawImage(ground, 0, 0, 800, 300);
    
   })
    
@@ -43,7 +43,7 @@ client.on('guildMemberAdd',async member => {
             ctx.fontSize = '72px';
             ctx.fillStyle = "#ffffff";
             ctx.textAlign = "center";
-            ctx.fillText(member.user.username, 555, 185);
+            ctx.fillText(member.user.username, 500, 200);
           
             let Avatar = Canvas.Image;
             let ava = new Avatar;
