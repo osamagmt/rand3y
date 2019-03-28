@@ -29,7 +29,7 @@ client.on('guildMemberAdd',async member => {
               let BG = Canvas.Image;
               let ground = new Image;
               ground.src = Background;
-              ctx.drawImage(ground, 0, 0, 800, 300);
+              ctx.drawImage(ground, 0, 0, 785, 320);
    
   })
    
